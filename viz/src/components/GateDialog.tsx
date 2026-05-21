@@ -8,6 +8,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { colors, fonts, radii, spacing } from '../staffing/styles/tokens.js';
+import { useTranslation } from '../hooks/useTranslation.js';
 
 interface GateDialogProps {
   gateType: string;
@@ -34,6 +35,7 @@ export function GateDialog({
   onDecision,
   onDismiss,
 }: GateDialogProps) {
+  const { t } = useTranslation();
   const [notes, setNotes] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -112,11 +114,11 @@ export function GateDialog({
         onDecision(decision, notes);
       } else {
         await response.text().catch(() => ''); // drain response body
-        setErrorMsg('Submission failed. Please try again.');
+        setErrorMsg(t('msg_error'));
       }
     } catch (err) {
       void err; // Sentry captures via ErrorBoundary; avoid exposing internals in console
-      setErrorMsg('Unable to reach the server. Please check your connection and try again.');
+      setErrorMsg(t('error_api'));
     } finally {
       setSubmitting(false);
     }
@@ -133,7 +135,7 @@ export function GateDialog({
             </svg>
           </div>
           <div style={styles.headerText}>
-            <span style={styles.headerLabel}>HUMAN GATE</span>
+            <span style={styles.headerLabel}>{t('gate_title')}</span>
             <span id="gate-dialog-title" style={styles.gateLabel}>
               {GATE_LABELS[gateType] || gateType}
             </span>
@@ -141,7 +143,7 @@ export function GateDialog({
           <button
             onClick={onDismiss}
             disabled={submitting}
-            aria-label="Close gate dialog"
+            aria-label={t('close')}
             style={{
               ...styles.closeButton,
               backgroundColor: hoveredBtn === 'close' ? colors.bgPanel : 'transparent',
@@ -174,18 +176,18 @@ export function GateDialog({
               />
             </div>
             <span style={styles.demoCountdownLabel}>
-              {countdown > 0 ? `Reviewing automatically… ${countdown}` : 'Approved'}
+              {countdown > 0 ? `${t('gate_review_required')}... ${countdown}` : t('gate_approve')}
             </span>
           </div>
         ) : (
           <>
             {/* Notes */}
             <div style={styles.notesSection}>
-              <label htmlFor="gate-notes-input" className="sr-only">Notes</label>
+              <label htmlFor="gate-notes-input" className="sr-only">{t('gate_comment')}</label>
               <input
                 id="gate-notes-input"
                 type="text"
-                placeholder="Notes (optional)..."
+                placeholder={`${t('gate_comment')} (optional)...`}
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 style={styles.notesInput}
@@ -214,7 +216,7 @@ export function GateDialog({
                 onMouseLeave={() => setHoveredBtn(null)}
                 disabled={submitting}
               >
-                Reject
+                {t('gate_reject')}
               </button>
               <button
                 onClick={() => handleDecision('modify')}
@@ -228,7 +230,7 @@ export function GateDialog({
                 onMouseLeave={() => setHoveredBtn(null)}
                 disabled={submitting}
               >
-                Modify
+                {t('gate_title').includes('проверка') ? 'Изменить' : t('gate_comment')}
               </button>
               <button
                 onClick={() => handleDecision('approve')}
@@ -242,7 +244,7 @@ export function GateDialog({
                 onMouseLeave={() => setHoveredBtn(null)}
                 disabled={submitting}
               >
-                Approve
+                {t('gate_approve')}
               </button>
             </div>
           </>
