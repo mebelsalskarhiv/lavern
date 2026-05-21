@@ -8,6 +8,7 @@
 
 import { useEffect, useCallback } from 'react';
 import { colors, fonts, radii } from '../staffing/styles/tokens.js';
+import { useTranslation } from '../hooks/useTranslation.js';
 
 // ── Component ──────────────────────────────────────────────────────────
 
@@ -17,6 +18,8 @@ interface ErrorToastProps {
 }
 
 export function ErrorToast({ message, onDismiss }: ErrorToastProps) {
+  const { t } = useTranslation();
+  
   // Auto-dismiss after 8 seconds
   useEffect(() => {
     const timer = setTimeout(onDismiss, 8000);
@@ -41,7 +44,7 @@ export function ErrorToast({ message, onDismiss }: ErrorToastProps) {
 
         {/* Message */}
         <div style={styles.content}>
-          <span style={styles.label}>Error</span>
+          <span style={styles.label}>{t('error')}</span>
           <span style={styles.message}>{message}</span>
         </div>
 
@@ -49,7 +52,7 @@ export function ErrorToast({ message, onDismiss }: ErrorToastProps) {
         <button
           onClick={handleDismiss}
           style={styles.dismissBtn}
-          aria-label="Dismiss error"
+          aria-label={t('close')}
           onMouseEnter={e => { e.currentTarget.style.color = colors.text; }}
           onMouseLeave={e => { e.currentTarget.style.color = colors.textDim; }}
         >
