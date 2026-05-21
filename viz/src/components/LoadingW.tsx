@@ -7,6 +7,7 @@
  */
 
 import { colors, fonts } from '../staffing/styles/tokens.js';
+import { useTranslation } from '../hooks/useTranslation.js';
 
 interface LoadingWProps {
   /** Optional text below the W (e.g., "Loading session..."). If omitted, no text shown. */
@@ -16,6 +17,8 @@ interface LoadingWProps {
 }
 
 export function LoadingW({ text, size = 64 }: LoadingWProps) {
+  const { t } = useTranslation();
+  
   return (
     <div style={{
       width: '100%',
@@ -48,9 +51,9 @@ export function LoadingW({ text, size = 64 }: LoadingWProps) {
           fontWeight: 500,
           color: colors.textDim,
           letterSpacing: 0.5,
-          textTransform: 'uppercase',
+          textTransform: 'uppercase' as const,
         }}>
-          {text}
+          {t('loading')}
         </div>
       )}
     </div>
