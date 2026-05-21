@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import type { ShemEvent, AgentRole } from '../types/events.js';
 import { AGENT_COLORS, AGENT_LABELS } from '../types/events.js';
 import { colors, fonts, radii } from '../staffing/styles/tokens.js';
+import { useTranslation } from '../hooks/useTranslation.js';
 
 interface AgentInfo {
   role: string;
@@ -34,6 +35,7 @@ interface SidebarProps {
 }
 
 export function Sidebar({ events }: SidebarProps) {
+  const { t } = useTranslation();
   const [agentInfos, setAgentInfos] = useState<Map<string, AgentInfo>>(new Map());
 
   useEffect(() => {
@@ -86,7 +88,7 @@ export function Sidebar({ events }: SidebarProps) {
 
   return (
     <div style={styles.container}>
-      <h3 style={styles.title}>Agents</h3>
+      <h3 style={styles.title}>{t('sidebar_agents')}</h3>
       <div style={styles.roster}>
         {ALL_ROLES.map((role) => {
           const info = agentInfos.get(role) || { role, status: 'idle' as const, eventCount: 0 };
@@ -111,7 +113,7 @@ export function Sidebar({ events }: SidebarProps) {
                     color: statusFg[info.status],
                   }}
                 >
-                  {info.status}
+                  {t(`status_${info.status}`)}
                 </span>
               </div>
               {info.lastEvent && (

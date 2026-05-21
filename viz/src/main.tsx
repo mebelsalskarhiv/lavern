@@ -5,6 +5,7 @@ import * as Sentry from '@sentry/react';
 import { App } from './App.js';
 import { AuthGate } from './auth/AuthGate.js';
 import { installApiInterceptor } from './hooks/useApiFetch.js';
+import { t } from './i18n/index.js';
 
 // Initialize Sentry error monitoring (if DSN configured)
 const SENTRY_DSN = import.meta.env.VITE_SENTRY_DSN;
@@ -41,20 +42,20 @@ function SentryFallback() {
       backgroundColor: '#FAF9F6', color: '#1A1A1A', textAlign: 'center', padding: 40,
     }}>
       <h1 style={{ fontSize: 36, fontWeight: 300, marginBottom: 16 }}>
-        Something went wrong
+        {t('error_unknown')}
       </h1>
       <p style={{ fontSize: 14, fontFamily: "'Geist', sans-serif", color: 'rgba(26,26,26,0.5)', marginBottom: 32, maxWidth: 400 }}>
-        An unexpected error occurred. Our team has been notified.
+        {t('error_api')}
       </p>
       <button
         onClick={() => window.location.reload()}
         style={{
           padding: '12px 36px', fontSize: 12, fontWeight: 600, fontFamily: "'Geist', sans-serif",
-          letterSpacing: 2, textTransform: 'uppercase', color: '#fff', backgroundColor: '#1A1A1A',
+          letterSpacing: 2, textTransform: 'uppercase' as const, color: '#fff', backgroundColor: '#1A1A1A',
           border: '2px solid #1A1A1A', borderRadius: 6, cursor: 'pointer',
         }}
       >
-        Reload
+        {t('retry')}
       </button>
     </div>
   );
